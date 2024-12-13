@@ -13,6 +13,7 @@ type Config struct {
 	Env        string     `yaml:"env" env-required:"true"`
 	GRPCServer GRPCServer `yaml:"grpc_server"`
 	Postgresql Postgresql `yaml:"postgresql"`
+	Migrations Migrations `yaml:"migrations"`
 }
 
 type GRPCServer struct {
@@ -35,6 +36,12 @@ func (db *Postgresql) DSN(options []string) string {
 	}
 
 	return fmt.Sprintf("%s?%s", db.Url, opts)
+}
+
+type Migrations struct {
+	Path          string `yaml:"path" env-default:"./migrations"`
+	TableName     string `yaml:"table_name" env-default:"migrations"`
+	PostgresqlUrl string `yaml:"-" env:"MIGRATIONS_POSTGRES_URL"`
 }
 
 func MustLoad() *Config {
