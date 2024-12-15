@@ -1,0 +1,10 @@
+version: "3"
+
+tasks:
+  docker-up:
+    cmds:
+      - docker compose --env-file .env up --build
+
+  docker-down:
+    cmds:
+      - docker compose down
