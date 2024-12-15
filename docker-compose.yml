@@ -1,0 +1,25 @@
+services:
+  user-service:
+    build: ./services/user/
+    env_file:
+      - ./services/user/.env
+    volumes:
+      - ./services/user/config:/app/config
+    ports:
+      - 50000:50000
+    networks:
+      - user-net
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:17-alpine
+    env_file:
+      - ./services/user/.env
+    ports:
+      - "${USER_PG_LOCAL_PORT}:5432"
+    networks:
+      - user-net
+
+networks:
+  user-net:
