@@ -6,6 +6,7 @@ import (
 	grpcapp "github.com/guluzadehh/go_bookstore/services/user/internal/app/grpc"
 	"github.com/guluzadehh/go_bookstore/services/user/internal/config"
 	"github.com/guluzadehh/go_bookstore/services/user/internal/services/user"
+	"github.com/guluzadehh/go_bookstore/services/user/internal/storage/postgresql"
 )
 
 type App struct {
@@ -14,7 +15,12 @@ type App struct {
 }
 
 func New(log *slog.Logger, config *config.Config) *App {
-	userService := user.New(log, config)
+	pgStorage, err := postgresql.New(config.Postgresql.DSN(config.Postgresql.Options))
+	if err != nil {
+		panic(err)
+	}
+
+	userService := user.New(log, config, pgStorage)
 
 	grpcApp := grpcapp.New(log, config, userService)
 
