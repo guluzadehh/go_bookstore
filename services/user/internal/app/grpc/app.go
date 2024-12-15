@@ -6,6 +6,7 @@ import (
 	"net"
 
 	"github.com/guluzadehh/go_bookstore/services/user/internal/config"
+	usergrpc "github.com/guluzadehh/go_bookstore/services/user/internal/grpc/user"
 	"google.golang.org/grpc"
 )
 
@@ -18,8 +19,13 @@ type GrpcApp struct {
 func New(
 	log *slog.Logger,
 	config *config.Config,
+	userService usergrpc.UserService,
 ) *GrpcApp {
 	server := grpc.NewServer()
+
+	userHandler := usergrpc.New(log, config, userService)
+
+	usergrpc.Register(server, userHandler)
 
 	return &GrpcApp{
 		log:        log,
