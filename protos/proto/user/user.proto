@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+option go_package = "github.com/guluzadehh/go_bookstore/user_grpc";
+
+message AuthRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message AuthResponse {
+    string access = 1;
+    string refresh = 2;
+}
+
+message RefreshRequest {
+    string refresh = 1;
+}
+
+message RefreshResponse {
+    string access = 1;
+}
+
+message User {
+    int64 id = 1;
+    string email = 2;
+    string phone = 3;
+    string first_name = 4;
+    string last_name = 5;
+    string created_at = 6; 
+    string updated_at = 7;
+    bool is_active = 8;
+}
+
+message CreateUserRequest {
+    string email = 1;
+    string password = 2;
+    string confirm_password = 3;
+}
+
+message CreateUserResponse {
+    User user = 1;
+}
+
+message GetUserRequest {
+    string id = 1;
+}
+
+message GetUserResponse {
+    User user = 1;
+}
+
+message UpdateUserProfileRequest {
+    string phone = 1;
+    string first_name = 2;
+    string last_name = 3;
+}
+
+message UpdateUserProfileResponse {
+    User user = 1;
+}
+
+message ListUsersRequest {
+    // This request can include filters, pagination, etc.
+}
+
+message ListUsersResponse {
+    repeated User users = 1;
+}
+
+service AuthService {
+    rpc Authenticate(AuthRequest) returns (AuthResponse);
+    rpc Refresh(RefreshRequest) returns (RefreshResponse);
+}
+
+service UserService {
+    rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+    rpc GetUserProfile(GetUserRequest) returns (GetUserResponse);
+    rpc UpdateUserProfile(UpdateUserProfileRequest) returns (UpdateUserProfileResponse);
+    rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+}
