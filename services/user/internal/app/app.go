@@ -22,7 +22,7 @@ func New(log *slog.Logger, config *config.Config) *App {
 	}
 
 	userService := user.New(log, config, pgStorage)
-	authService := auth.New(log, config)
+	authService := auth.New(log, config, pgStorage)
 
 	grpcApp := grpcapp.New(log, config, userService, authService)
 

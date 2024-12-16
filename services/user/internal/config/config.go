@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
 )
@@ -14,6 +15,7 @@ type Config struct {
 	GRPCServer GRPCServer `yaml:"grpc_server"`
 	Postgresql Postgresql `yaml:"postgresql"`
 	Migrations Migrations `yaml:"migrations"`
+	JWT        JWT        `yaml:"jwt"`
 }
 
 type GRPCServer struct {
@@ -36,6 +38,22 @@ func (db *Postgresql) DSN(options []string) string {
 	}
 
 	return fmt.Sprintf("%s?%s", db.Url, opts)
+}
+
+type JWT struct {
+	SecretKey string  `yaml:"-" env:"JWT_SECRET_KEY" env-required:"true"`
+	Access    Access  `yaml:"access"`
+	Refresh   Refresh `yaml:"refresh"`
+}
+
+type Access struct {
+	Expire time.Duration `yaml:"expire" env-default:"1h"`
+}
+
+type Refresh struct {
+	Expire     time.Duration `yaml:"expire" env-default:"168h"`
+	CookieName string        `yaml:"cookie_name" env-default:"jwt_refresh"`
+	Uri        string        `yaml:"uri" env-required:"true"`
 }
 
 type Migrations struct {
