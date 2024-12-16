@@ -6,6 +6,7 @@ import (
 	"net"
 
 	"github.com/guluzadehh/go_bookstore/services/user/internal/config"
+	authgrpc "github.com/guluzadehh/go_bookstore/services/user/internal/grpc/auth"
 	usergrpc "github.com/guluzadehh/go_bookstore/services/user/internal/grpc/user"
 	"google.golang.org/grpc"
 )
@@ -20,12 +21,15 @@ func New(
 	log *slog.Logger,
 	config *config.Config,
 	userService usergrpc.UserService,
+	authService authgrpc.AuthService,
 ) *GrpcApp {
 	server := grpc.NewServer()
 
 	userHandler := usergrpc.New(log, config, userService)
+	authHandler := authgrpc.New(log, config, authService)
 
 	usergrpc.Register(server, userHandler)
+	authgrpc.Register(server, authHandler)
 
 	return &GrpcApp{
 		log:        log,

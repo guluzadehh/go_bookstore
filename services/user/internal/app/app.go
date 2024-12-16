@@ -5,6 +5,7 @@ import (
 
 	grpcapp "github.com/guluzadehh/go_bookstore/services/user/internal/app/grpc"
 	"github.com/guluzadehh/go_bookstore/services/user/internal/config"
+	"github.com/guluzadehh/go_bookstore/services/user/internal/services/auth"
 	"github.com/guluzadehh/go_bookstore/services/user/internal/services/user"
 	"github.com/guluzadehh/go_bookstore/services/user/internal/storage/postgresql"
 )
@@ -21,8 +22,9 @@ func New(log *slog.Logger, config *config.Config) *App {
 	}
 
 	userService := user.New(log, config, pgStorage)
+	authService := auth.New(log, config)
 
-	grpcApp := grpcapp.New(log, config, userService)
+	grpcApp := grpcapp.New(log, config, userService, authService)
 
 	return &App{
 		log:     log,
